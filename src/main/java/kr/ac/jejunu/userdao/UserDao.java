@@ -5,8 +5,7 @@ import java.sql.*;
 public class UserDao {
 
     public long add(User user) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/userinfo?characterEncoding=UTF-8", "root", "1234");
+        Connection connection = getConnection();
 
         PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo (name, password) VALUES (?, ?)");
         preparedStatement.setString(1, user.getName());
@@ -33,8 +32,7 @@ public class UserDao {
     }
 
     public User get(Long id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/userinfo?characterEncoding=UTF-8", "root", "1234");
+        Connection connection = getConnection();
 
         PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
@@ -53,6 +51,11 @@ public class UserDao {
         connection.close();
 
         return user;
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.jdbc.Driver");
+        return DriverManager.getConnection("jdbc:mysql://localhost/userinfo?characterEncoding=UTF-8", "root", "1234");
     }
 
 }
